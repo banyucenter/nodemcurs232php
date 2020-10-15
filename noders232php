@@ -1,0 +1,35 @@
+#include <ESP8266HTTPClient.h>
+#include <ESP8266WiFi.h>
+
+void setup() {
+  Serial.begin(9600);
+  WiFi.begin("ssid", "passssid");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.println("Waiting for connection");
+  }
+}
+
+void loop() {
+  if (WiFi.status() == WL_CONNECTED) {
+    while (Serial.available()) {
+      HTTPClient http;
+      String postData, a, b;
+      a = Serial.readString();
+      Serial.println(a);
+      postData = "sender=" + a.substring(0, 7) +
+                 "&amount=" + a.substring(8, 11) +
+                 "&receiver=" + a.substring(11, 21);
+      http.begin("http://endpoint/post");
+      http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+      int httpCode = http.POST(postData);
+      String payload = http.getString();
+      Serial.println(httpCode);
+      Serial.println(payload);
+      http.end();  //Close connection
+    }
+  }
+  else {
+    Serial.println("Error in WiFi connection");
+  }
+}
