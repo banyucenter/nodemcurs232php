@@ -1,4 +1,4 @@
-TX-TXD
-RX-RXD
-GND-GND
-VCC-3v3
+TX----->TXD
+RX----->RXD
+GND---->GND
+VCC---->3v3
